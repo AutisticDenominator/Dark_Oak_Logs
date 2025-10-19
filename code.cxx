@@ -185,6 +185,17 @@ public:
 
 Core_Capabilities Core;
 
+class Cryptography {
+public:
+	void Encryption(string password, string name) {
+		string content = Core.Read_Log(name);
+	}
+
+	void Decryption(string password, string name) {
+		string content = Core.Read_Log(name);
+	}
+};
+
 class Unifying_Functions {
 public:
 	void Write_To_Proceed() {
