@@ -341,7 +341,7 @@ public:
 		end_status = Replace_Log_Text(content, name);
 	}
 
-	void Decryption(string password, string name) {
+	bool Decryption(string password, string name) {
 		string content = Core.Read_Log(name);
 
 		bool standard_status = Standard_Check(password, name);
