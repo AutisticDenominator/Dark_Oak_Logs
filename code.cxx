@@ -82,7 +82,7 @@ public:
 		}
 	}
 
-	void Display_Log(string name) {
+	string Read_Log(string name) {
 		ifstream File("C:\\DOLlogs\\" + name + ".txt");
 
 		if (File.fail()) {
@@ -115,9 +115,7 @@ public:
 
 		File.close();
 
-		cout << file_content;
-
-		return;
+		return file_content;
 	}
 
 	void Created_Logs() {
@@ -223,7 +221,8 @@ public:
 
 			system("cls");
 
-			Core.Display_Log(log_name);
+			string content = Core.Read_Log(log_name);
+			cout << content;
 			Write_To_Proceed();
 		}
 		else if (start_input == "help") {
