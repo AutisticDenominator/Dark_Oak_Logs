@@ -187,12 +187,199 @@ Core_Capabilities Core;
 
 class Cryptography {
 public:
-	void Encryption(string password, string name) {
+	map<int, int> password_numbers;
+	map<int, int> password_int_final;
+
+	char alphabet_lowercase[26] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+	char alphabet_uppercase[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+
+	int password_map_size = 0;
+
+	bool Password_String_To_Int(string password) {
+		password_numbers.clear();
+
+		if (password.size() < 4) {
+			return false;
+		}
+
+		for (int i = 0; i < password.size(); i++) {
+			bool found = false;
+
+			for (int c = 0; c < 26; c++) {
+				if (password[i] == alphabet_lowercase[c]) {
+					password_numbers[i] = c;
+					found = true;
+					break;
+				} 
+				else if (password[i] == alphabet_uppercase[c]) {
+					password_numbers[i] = c;
+					found = true;
+					break;
+				}
+			}
+
+			if (found == false) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	bool Password_Modification(string password) {
+		password_int_final.clear();
+
+		int multiplier;
+		string multiplier_temp;
+		string final_password_temp;
+
+		for (int i = 0; i < 4; i++) {
+			for (int c = 0; c < 26; c++) {
+				if (password[i] == alphabet_lowercase[c]) {
+					multiplier_temp = multiplier_temp + to_string(c);
+				}
+				else if (password[i] == alphabet_uppercase[c]) {
+					multiplier_temp = multiplier_temp + to_string(c);
+				}
+			}
+		}
+
+		multiplier = stoi(multiplier_temp);
+		multiplier = multiplier * multiplier;
+
+		for (auto it = password_numbers.begin(); it != password_numbers.end(); it++) {
+			it->second = it->second * multiplier;
+
+			final_password_temp = final_password_temp + to_string(it->second);
+		}
+
+		for (int j = 0; j < final_password_temp.size(); j += 2) {
+			if ((j + 1) >= final_password_temp.size()) {
+				password_int_final[j / 2] = stoi(final_password_temp[j]);
+				break;
+			}
+
+			if (stoi(final_password_temp[j]) == 0) {
+				password_int_final[j / 2] = stoi(final_password_temp[j + 1]);
+				continue;
+			}
+
+			string temp_add = final_password_temp[j] + final_password_temp[j + 1];
+			password_int_final[j / 2] = stoi(temp_add);
+		}
+
+		return true;
+	}
+
+	void Password_Size() {
+		password_map_size = 0;
+
+		for (auto it = password_int_final.begin(); it != password_int_final.end(); it++) {
+			password_map_size = password_map_size + 1;
+		}
+	}
+
+	bool Standard_Check(string password, string name) {
+		bool status = Password_String_To_Int(password);
+
+		if (status == false) {
+			return false;
+		}
+
+		bool status_modifier = Password_Modification(password);
+
+		if (status_modifier == false) {
+			return false;
+		}
+
+		Password_Size();
+
+		return true;
+	}
+
+	bool Replace_Log_Text(string new_content, string name) {
+
+	}
+
+	bool Encryption(string password, string name) {
 		string content = Core.Read_Log(name);
+
+		bool standard_status = Standard_Check(password, name);
+
+		if (standard_status == false) {
+			return false;
+		}
+
+		for (int i = 0; i < content.size(); i++) {
+			if (content[i] == ' ' || content[i] == '') {
+				continue;
+			}
+
+			bool lowercase = true;
+			int letter_index;
+
+			for (int c = 0; c < 26; c++) {
+				if (content[i] == alphabet_uppercase[c]) {
+					lowercase = false;
+					letter_index = c;
+					break;
+				}
+				else if (content[i] == alphabet_lowercase[c]) {
+					letter_index = c;
+					break;
+				}
+			}
+
+			if (lowercase) {
+				content[i] = alphabet_lowercase[(letter_index + password_int_final[i % password_map_size]) % 26]
+			}
+			else {
+				content[i] = alphabet_uppercase[(letter_index + password_int_final[i % password_map_size]) % 26]
+			}
+		}
+
+		end_status = Replace_Log_Text(content, name);
 	}
 
 	void Decryption(string password, string name) {
 		string content = Core.Read_Log(name);
+
+		bool standard_status = Standard_Check(password, name);
+
+		if (standard_status == false) {
+			return false;
+		}
+
+		for (int i = 0; i < content.size(); i++) {
+			if (content[i] == ' ' || content[i] == '') {
+				continue;
+			}
+
+			bool lowercase = true;
+			int letter_index;
+
+			for (int c = 0; c < 26; c++) {
+				if (content[i] == alphabet_uppercase[c]) {
+					lowercase = false;
+					letter_index = c;
+					break;
+				}
+				else if (content[i] == alphabet_lowercase[c]) {
+					letter_index = c;
+					break;
+				}
+			}
+
+			if (lowercase) {
+				//the +260 just so it doesnt go below 0 as the % operator doesnt perform the correct modulo operation as it is only remainder division
+				content[i] = alphabet_lowercase[(260 + letter_index - password_int_final[i % password_map_size]) % 26]
+			}
+			else {
+				content[i] = alphabet_uppercase[(260 + letter_index - password_int_final[i % password_map_size]) % 26]
+			}
+		}
+
+		end_status = Replace_Log_Text(content, name);
 	}
 };
 
