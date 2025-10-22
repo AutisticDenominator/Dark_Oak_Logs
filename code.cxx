@@ -298,7 +298,39 @@ public:
 	}
 
 	bool Replace_Log_Text(string new_content, string name) {
+		string temp_line;
+		string final_log;
+		int counter = 0;
 
+		while (getline(new_content, temp_line)) {
+			if(temp_line[0] != ''){
+				counter = counter + 1
+			}
+			else {
+				continue;
+			}
+
+			switch (counter) {
+				case 1:
+					final_log = final_log + "|title|" + temp_line;
+					break;
+				case 2:
+					final_log = final_log + "|timestamp|" + temp_line;
+					break;
+				case 3:
+					final_log = final_log + "|content|" + temp_line;
+					break;
+				default:
+					final_log = final_log + temp_line;
+					break;
+			}
+		}
+
+		ofstream File("C:\\DOLlogs\\" + name + ".txt");
+
+		File << final_log;
+
+		return true;
 	}
 
 	bool Encryption(string password, string name) {
@@ -379,7 +411,9 @@ public:
 			}
 		}
 
-		end_status = Replace_Log_Text(content, name);
+		bool end_status = Replace_Log_Text(content, name);
+
+		return end_status;
 	}
 };
 
