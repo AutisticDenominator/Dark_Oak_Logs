@@ -87,7 +87,7 @@ public:
 
 		if (File.fail()) {
 			File.close();
-			return;
+			return "";
 		}
 
 		string line_content;
@@ -336,6 +336,10 @@ public:
 	bool Encryption(string password, string name) {
 		string content = Core.Read_Log(name);
 
+		if(content == ""){
+			return false;
+		}
+
 		bool standard_status = Standard_Check(password, name);
 
 		if (standard_status == false) {
@@ -370,7 +374,9 @@ public:
 			}
 		}
 
-		end_status = Replace_Log_Text(content, name);
+		bool end_status = Replace_Log_Text(content, name);
+
+		return end_status
 	}
 
 	bool Decryption(string password, string name) {
@@ -417,6 +423,8 @@ public:
 	}
 };
 
+Cryptography Cypher;
+
 class Unifying_Functions {
 public:
 	void Write_To_Proceed() {
@@ -448,7 +456,7 @@ public:
 			Core.Created_Logs();
 
 			string log_name;
-			cout << "\nWrite the the full name of the log, which you desire to read\n";
+			cout << "\nWrite the full name of the log, which you desire to read\n";
 			cin >> log_name;
 
 			system("cls");
@@ -458,11 +466,50 @@ public:
 			Write_To_Proceed();
 		}
 		else if (start_input == "help") {
-			cout << "Commands - write, read, help, exit.\n";
+			cout << "Commands - write, read, help, encrypt, decrypt, exit.\n";
 			Write_To_Proceed();
 		}
 		else if (start_input == "exit") {
 			return;
+		}
+		else if (start_input == "encrypt") {
+			Core.Created_Logs();
+
+			string log_name;
+			cout << "\nWrite the full name of the log, which you desire to encrypt\n";
+			cin >> log_name;
+
+			system("cls");
+
+			string password;
+			cout << "\nWrite the password, with which you desire to encrypt\n";
+			cin >> password;
+
+			system("cls");
+
+			bool result = Cypher.Encryption(password, log_name);
+			cout << "Process succesful: " + to_string(result) + "\n";
+			Write_To_Proceed();
+
+		}
+		else if (start_input == "decrypt") {
+			Core.Created_Logs();
+
+			string log_name;
+			cout << "\nWrite the full name of the log, which you desire to decrypt\n";
+			cin >> log_name;
+
+			system("cls");
+
+			string password;
+			cout << "\nWrite the password, with which you desire to decrypt\n";
+			cin >> password;
+
+			system("cls");
+
+			bool result = Cypher.Decryption(password, log_name);
+			cout << "Process succesful: " + to_string(result) + "\n";
+			Write_To_Proceed();
 		}
 		else {
 			cout << "Invalid input!\n";
