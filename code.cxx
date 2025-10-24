@@ -74,7 +74,7 @@ public:
 
 				New_Log.close();
 			}
-			
+
 			return true;
 		}
 		catch (...) {
@@ -98,7 +98,7 @@ public:
 			string filtered_line;
 
 			for (int i = 0; i < line_content.size(); i++) {
-				if (line_content[i] == '|'){
+				if (line_content[i] == '|') {
 					symbol_count = symbol_count + 1;
 					continue;
 				}
@@ -134,7 +134,7 @@ public:
 
 			File.close();
 		}
-		
+
 		string all_created;
 
 		for (int c = 0; c < max_number_log; c++) {
@@ -143,7 +143,7 @@ public:
 			string line_content;
 			string title;
 			string timestamp;
-			
+
 			while (getline(File, line_content)) {
 				int symbol_count = 0;
 				string filtered_line;
@@ -160,7 +160,7 @@ public:
 						filtered_line = filtered_line + line_content[i];
 					}
 				}
-				
+
 				if (line_content.size() >= 4) {
 					if (line_content[3] == 'm' && line_content[0] == '|') {
 						timestamp = filtered_line;
@@ -190,8 +190,8 @@ public:
 	map<int, int> password_numbers;
 	map<int, int> password_int_final;
 
-	char alphabet_lowercase[26] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
-	char alphabet_uppercase[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+	char alphabet_lowercase[26] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
+	char alphabet_uppercase[26] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
 
 	int password_map_size = 0;
 
@@ -210,7 +210,7 @@ public:
 					password_numbers[i] = c;
 					found = true;
 					break;
-				} 
+				}
 				else if (password[i] == alphabet_uppercase[c]) {
 					password_numbers[i] = c;
 					found = true;
@@ -254,17 +254,23 @@ public:
 		}
 
 		for (int j = 0; j < final_password_temp.size(); j += 2) {
+			char temp_letter = final_password_temp[j];
+			char* temp_pointer = &temp_letter;
+
 			if ((j + 1) >= final_password_temp.size()) {
-				password_int_final[j / 2] = stoi(final_password_temp[j]);
+				password_int_final[j / 2] = atoi(temp_pointer);
 				break;
 			}
 
-			if (stoi(final_password_temp[j]) == 0) {
-				password_int_final[j / 2] = stoi(final_password_temp[j + 1]);
+			char second_letter = final_password_temp[j + 1];
+			char* second_pointer = &second_letter;
+
+			if (atoi(temp_pointer) == 0) {
+				password_int_final[j / 2] = atoi(second_pointer);
 				continue;
 			}
 
-			string temp_add = final_password_temp[j] + final_password_temp[j + 1];
+			string temp_add = temp_letter + second_letter;
 			password_int_final[j / 2] = stoi(temp_add);
 		}
 
@@ -302,29 +308,37 @@ public:
 		string final_log;
 		int counter = 0;
 
-		while (getline(new_content, temp_line)) {
-			if(temp_line[0] != ''){
-				counter = counter + 1
+		ofstream File("C:\\DOLlogs\\temp.txt");
+		File << new_content;
+		File.close();
+
+		ifstream File_Read("C:\\DOLlogs\\temp.txt");
+
+		while (getline(File_Read, temp_line)) {
+			if (temp_line[0] != ' ') {
+				counter = counter + 1;
 			}
 			else {
 				continue;
 			}
 
 			switch (counter) {
-				case 1:
-					final_log = final_log + "|title|" + temp_line;
-					break;
-				case 2:
-					final_log = final_log + "|timestamp|" + temp_line;
-					break;
-				case 3:
-					final_log = final_log + "|content|" + temp_line;
-					break;
-				default:
-					final_log = final_log + temp_line;
-					break;
+			case 1:
+				final_log = final_log + "|title|" + temp_line;
+				break;
+			case 2:
+				final_log = final_log + "|timestamp|" + temp_line;
+				break;
+			case 3:
+				final_log = final_log + "|content|" + temp_line;
+				break;
+			default:
+				final_log = final_log + temp_line;
+				break;
 			}
 		}
+		File_Read.close();
+		remove("C:\\DOLlogs\\temp.txt");
 
 		ofstream File("C:\\DOLlogs\\" + name + ".txt");
 
@@ -336,7 +350,7 @@ public:
 	bool Encryption(string password, string name) {
 		string content = Core.Read_Log(name);
 
-		if(content == ""){
+		if (content == "") {
 			return false;
 		}
 
@@ -347,7 +361,7 @@ public:
 		}
 
 		for (int i = 0; i < content.size(); i++) {
-			if (content[i] == ' ' || content[i] == '') {
+			if (content[i] == ' ' /* || content[i] == '' */) {
 				continue;
 			}
 
@@ -367,16 +381,16 @@ public:
 			}
 
 			if (lowercase) {
-				content[i] = alphabet_lowercase[(letter_index + password_int_final[i % password_map_size]) % 26]
+				content[i] = alphabet_lowercase[(letter_index + password_int_final[i % password_map_size]) % 26];
 			}
 			else {
-				content[i] = alphabet_uppercase[(letter_index + password_int_final[i % password_map_size]) % 26]
+				content[i] = alphabet_uppercase[(letter_index + password_int_final[i % password_map_size]) % 26];
 			}
 		}
 
 		bool end_status = Replace_Log_Text(content, name);
 
-		return end_status
+		return end_status;
 	}
 
 	bool Decryption(string password, string name) {
@@ -389,7 +403,7 @@ public:
 		}
 
 		for (int i = 0; i < content.size(); i++) {
-			if (content[i] == ' ' || content[i] == '') {
+			if (content[i] == ' ' /* || content[i] == ''*/) {
 				continue;
 			}
 
@@ -410,10 +424,10 @@ public:
 
 			if (lowercase) {
 				//the +260 just so it doesnt go below 0 as the % operator doesnt perform the correct modulo operation as it is only remainder division
-				content[i] = alphabet_lowercase[(260 + letter_index - password_int_final[i % password_map_size]) % 26]
+				content[i] = alphabet_lowercase[(260 + letter_index - password_int_final[i % password_map_size]) % 26];
 			}
 			else {
-				content[i] = alphabet_uppercase[(260 + letter_index - password_int_final[i % password_map_size]) % 26]
+				content[i] = alphabet_uppercase[(260 + letter_index - password_int_final[i % password_map_size]) % 26];
 			}
 		}
 
