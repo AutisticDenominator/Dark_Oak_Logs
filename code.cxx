@@ -190,8 +190,8 @@ public:
 	map<int, int> password_numbers;
 	map<int, int> password_int_final;
 
-	char alphabet_lowercase[26] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
-	char alphabet_uppercase[26] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+	string alphabet_lowercase = "abcdefghijklmnopqrstuvwxyz";
+	string alphabet_uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 	int password_map_size = 0;
 
@@ -314,6 +314,7 @@ public:
 
 		ifstream File_Read("C:\\DOLlogs\\temp.txt");
 
+		//this is also wrong by the way
 		while (getline(File_Read, temp_line)) {
 			if (temp_line[0] != ' ') {
 				counter = counter + 1;
@@ -348,6 +349,7 @@ public:
 	}
 
 	bool Encryption(string password, string name) {
+		//bro created 10 letters out of 4. WHYYYYYYY
 		string content = Core.Read_Log(name);
 
 		if (content == "") {
@@ -392,6 +394,7 @@ public:
 
 			if (lowercase) {
 				content[i] = alphabet_lowercase[(letter_index + password_int_final[i % password_map_size]) % 26];
+				cout << to_string((letter_index + password_int_final[i % password_map_size]) % 26) + " ";
 			}
 			else {
 				content[i] = alphabet_uppercase[(letter_index + password_int_final[i % password_map_size]) % 26];
@@ -444,10 +447,14 @@ public:
 
 			if (lowercase) {
 				//the +260 just so it doesnt go below 0 as the % operator doesnt perform the correct modulo operation as it is only remainder division
-				content[i] = alphabet_lowercase[(260 + letter_index - password_int_final[i % password_map_size]) % 26];
+				//this outputed a fucking smiley face. I am in shambles
+				//Okay. Smiley face crisis averted. Now there are other problems I have to deal with
+				cout << to_string((1040 + letter_index - password_int_final[i % password_map_size]) % 26) + " ";
+
+				content[i] = alphabet_lowercase[(1040 + letter_index - password_int_final[i % password_map_size]) % 26];
 			}
 			else {
-				content[i] = alphabet_uppercase[(260 + letter_index - password_int_final[i % password_map_size]) % 26];
+				content[i] = alphabet_uppercase[(1040 + letter_index - password_int_final[i % password_map_size]) % 26];
 			}
 		}
 
