@@ -270,7 +270,7 @@ public:
 				continue;
 			}
 
-			string temp_add = temp_letter + second_letter;
+			string temp_add = to_string(temp_letter) + second_letter;
 			password_int_final[j / 2] = stoi(temp_add);
 		}
 
@@ -308,9 +308,9 @@ public:
 		string final_log;
 		int counter = 0;
 
-		ofstream File("C:\\DOLlogs\\temp.txt");
-		File << new_content;
-		File.close();
+		ofstream File_temp("C:\\DOLlogs\\temp.txt");
+		File_temp << new_content;
+		File_temp.close();
 
 		ifstream File_Read("C:\\DOLlogs\\temp.txt");
 
@@ -366,18 +366,28 @@ public:
 			}
 
 			bool lowercase = true;
-			int letter_index;
+			int letter_index = 0;
+			bool valid = false;
 
 			for (int c = 0; c < 26; c++) {
 				if (content[i] == alphabet_uppercase[c]) {
 					lowercase = false;
 					letter_index = c;
+					valid = true;
 					break;
 				}
 				else if (content[i] == alphabet_lowercase[c]) {
 					letter_index = c;
+					valid = true;
 					break;
 				}
+				else {
+					valid = false;
+				}
+			}
+
+			if (valid == false) {
+				continue;
 			}
 
 			if (lowercase) {
@@ -408,18 +418,28 @@ public:
 			}
 
 			bool lowercase = true;
-			int letter_index;
+			int letter_index = 0;
+			bool valid = false;
 
 			for (int c = 0; c < 26; c++) {
 				if (content[i] == alphabet_uppercase[c]) {
 					lowercase = false;
 					letter_index = c;
+					valid = true;
 					break;
 				}
 				else if (content[i] == alphabet_lowercase[c]) {
 					letter_index = c;
+					valid = true;
 					break;
 				}
+				else {
+					valid = false;
+				}
+			}
+
+			if (valid == false) {
+				continue;
 			}
 
 			if (lowercase) {
