@@ -38,11 +38,11 @@ public:
 		try {
 			Attribute.output = "|title|" + Attribute.title + "\n" + "|timestamp|";
 
-			for (int s = 0; s < 26; s++) {
+			for (int s = 0; s < 24; s++) {
 				Attribute.output = Attribute.output + Attribute.str_timestamp[s];
 			}
 
-			Attribute.output = Attribute.output + "\n|content|" + Attribute.content + "\n";
+			Attribute.output = Attribute.output + "\n" + "|content|" + Attribute.content + "\n";
 
 			int new_log_number = 0;
 			bool found = false;
@@ -307,7 +307,6 @@ public:
 		string temp_line;
 		string final_log;
 		int counter = 0;
-
 		ofstream File_temp("C:\\DOLlogs\\temp.txt");
 		File_temp << new_content;
 		File_temp.close();
@@ -316,25 +315,38 @@ public:
 
 		//this is also wrong by the way
 		while (getline(File_Read, temp_line)) {
-			if (temp_line[0] != ' ') {
+			bool valid_line = false;
+
+			for (int j = 0; j < 26; j++) {
+				if (temp_line[0] == alphabet_lowercase[j]) {
+					valid_line = true;
+				} 
+				else if (temp_line[0] == alphabet_uppercase[j]) {
+					valid_line = true;
+				}
+			}
+
+			if (valid_line == true) {
 				counter = counter + 1;
 			}
 			else {
 				continue;
 			}
 
+			cout << counter;
+
 			switch (counter) {
 			case 1:
-				final_log = final_log + "|title|" + temp_line;
+				final_log = final_log + "|title|" + temp_line + "\n";
 				break;
 			case 2:
-				final_log = final_log + "|timestamp|" + temp_line;
+				final_log = final_log + "|timestamp|" + temp_line + "\n";
 				break;
 			case 3:
-				final_log = final_log + "|content|" + temp_line;
+				final_log = final_log + "|content|" + temp_line + "\n";
 				break;
 			default:
-				final_log = final_log + temp_line;
+				final_log = final_log + temp_line + "\n";
 				break;
 			}
 		}
@@ -342,7 +354,6 @@ public:
 		remove("C:\\DOLlogs\\temp.txt");
 
 		ofstream File("C:\\DOLlogs\\" + name + ".txt");
-
 		File << final_log;
 
 		return true;
@@ -394,7 +405,6 @@ public:
 
 			if (lowercase) {
 				content[i] = alphabet_lowercase[(letter_index + password_int_final[i % password_map_size]) % 26];
-				cout << to_string((letter_index + password_int_final[i % password_map_size]) % 26) + " ";
 			}
 			else {
 				content[i] = alphabet_uppercase[(letter_index + password_int_final[i % password_map_size]) % 26];
@@ -446,10 +456,7 @@ public:
 			}
 
 			if (lowercase) {
-				//the +260 just so it doesnt go below 0 as the % operator doesnt perform the correct modulo operation as it is only remainder division
-				//this outputed a fucking smiley face. I am in shambles
-				//Okay. Smiley face crisis averted. Now there are other problems I have to deal with
-				cout << to_string((1040 + letter_index - password_int_final[i % password_map_size]) % 26) + " ";
+				//the +1040 just so it doesnt go below 0 as the % operator doesnt perform the correct modulo operation as it is only remainder division
 
 				content[i] = alphabet_lowercase[(1040 + letter_index - password_int_final[i % password_map_size]) % 26];
 			}
