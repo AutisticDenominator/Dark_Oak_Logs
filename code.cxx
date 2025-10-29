@@ -333,8 +333,6 @@ public:
 				continue;
 			}
 
-			cout << counter;
-
 			switch (counter) {
 			case 1:
 				final_log = final_log + "|title|" + temp_line + "\n";
