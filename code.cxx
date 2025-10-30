@@ -245,7 +245,6 @@ public:
 		}
 
 		multiplier = stoi(multiplier_temp);
-		multiplier = multiplier * multiplier;
 
 		for (auto it = password_numbers.begin(); it != password_numbers.end(); it++) {
 			it->second = it->second * multiplier;
@@ -332,6 +331,8 @@ public:
 			else {
 				continue;
 			}
+
+			cout << counter;
 
 			switch (counter) {
 			case 1:
